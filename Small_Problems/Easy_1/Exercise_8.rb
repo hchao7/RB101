@@ -24,6 +24,7 @@ puts reversed_number(12003) == 30021
 puts reversed_number(1) == 1
 puts reversed_number(0) == 0
 puts reversed_number(000) == 0
+
 # While loop will break if:
 # Reaches a non-zero number
 # Reaches 0 and that's the only digit left
