@@ -1,6 +1,6 @@
 
 def prompt(message)
-	puts "#{message}"
+	puts "=> #{message}"
 end 
 
 def integer_validation(input, validation_type)
@@ -69,9 +69,10 @@ loop do
   monthly_payment = (loan_amount.to_f) * (monthly_APR / (1 - (1 + monthly_APR)**(-loan_months)))
   prompt("Your monthly payment is: $#{format('%.2f', monthly_payment)}")
 
-  puts "If you would like to perform another calculation, enter y: "
+  prompt("If you would like to perform another calculation, enter y: ")
   answer = gets.chomp
   break unless answer.downcase().start_with?('y')
 end 
 
 prompt("Thank you for using the Mortgage Calculator!")
+
