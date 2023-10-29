@@ -1,3 +1,7 @@
+require 'yaml'
+MESSAGES = YAML.load_file('rps_bonus_messages.yml')
+
+# Valid abbreviations for moves
 VALID_CHOICES = %w(r p sc sp l)
 
 def prompt(message)
@@ -6,16 +10,16 @@ end
 
 # Determine if there is a win for an individual round
 def win?(first, second)
-  winning_moves = {"scissors" => ["paper", "lizard"], 
-                  "paper" => ["rock", "spock"], 
-                  "rock" => ["lizard", "scissors"],
-                  "lizard" => ["spock", "paper"],
-                  "spock" => ["scissors", "rock"]}
-  return winning_moves[first].include?(second)
-end 
+  winning_moves = { "scissors" => ["paper", "lizard"],
+                    "paper" => ["rock", "spock"],
+                    "rock" => ["lizard", "scissors"],
+                    "lizard" => ["spock", "paper"],
+                    "spock" => ["scissors", "rock"] }
+  winning_moves[first].include?(second)
+end
 
-# Determine round result: Player Win, Computer Win, or Tie
-def determine_round_result(player, computer)
+# Determine Player Win, Computer Win, or Tie for individual round
+def round_result(player, computer)
   if win?(player, computer)
     "Player Win"
   elsif win?(computer, player)
@@ -25,40 +29,47 @@ def determine_round_result(player, computer)
   end
 end
 
+# Display message according to the result
 def display_round_result(result)
   case result
-    when 'Player Win'
-      prompt("You won this round!")
-    when 'Computer Win'
-      prompt("The computer won this round!")
-    else 
-      prompt("It's a tie for this round!")
+  when 'Player Win'
+    prompt(MESSAGES['player_win'])
+  when 'Computer Win'
+    prompt(MESSAGES['computer_win'])
+  else
+    prompt(MESSAGES['tie'])
   end
-end 
+end
 
+# Prompt that appears each time player needs to enter a move
 choice_prompt = <<-MSG
 Choose your move by entering the abbreviation on the left:
   r  - rock
-  p  - paper 
+  p  - paper
   sc - scissors
   sp - spock
   l  - lizard
 
-Enter abbreviation here: 
+Enter abbreviation here:
 MSG
 
-fullname_choices = {"r" => "rock", 
-"p" => "paper", 
-"sc" => "scissors",
-"sp" => "spock",
-"l" => "lizard"}
+# Abbreviations and fullnames for moves
+fullname_choices = { "r" => "rock",
+                     "p" => "paper",
+                     "sc" => "scissors",
+                     "sp" => "spock",
+                     "l" => "lizard" }
 
+# Start overall game
 loop do
   num_player_wins = 0
   num_computer_wins = 0
 
+  # Start individual round
   loop do
     abbreviated_choice = ''
+
+    # Ask human player to enter move until valid move is entered
     loop do
       prompt(choice_prompt)
       abbreviated_choice = Kernel.gets().chomp()
@@ -66,40 +77,44 @@ loop do
       if VALID_CHOICES.include?(abbreviated_choice)
         break
       else
-        prompt("That's not a valid choice.")
-      end	
-    end 
+        prompt(MESSAGES['invalid_choice'])
+      end
+    end
 
+    # Assign computer player a move
     choice = fullname_choices[abbreviated_choice]
     computer_choice = fullname_choices[VALID_CHOICES.sample]
     prompt("You chose: #{choice}; Computer chose: #{computer_choice}")
 
-    result = determine_round_result(choice, computer_choice)
+    # Determine round result
+    result = round_result(choice, computer_choice)
     display_round_result(result)
 
-    # Update the score
+    # Update score
     if result == 'Player Win'
-      num_player_wins += 1 
+      num_player_wins += 1
     elsif result == 'Computer Win'
-      num_computer_wins += 1 
+      num_computer_wins += 1
     end
 
-    # Display current score
-    prompt("You have: #{num_player_wins} wins; Computer has: #{num_computer_wins}")
-    
-    # Display grand winner, if there is one
-    if (num_player_wins == 3)
-      prompt("You are the grand winner!")
+    # Display score
+    prompt("You have: #{num_player_wins} wins; " \
+           "Computer has: #{num_computer_wins} wins")
+
+    # Check for grand winner
+    if num_player_wins == 3
+      prompt(MESSAGES['player_grand_winner'])
       break
-    elsif (num_computer_wins == 3)
-      prompt("The Computer is the grand winner!")
+    elsif num_computer_wins == 3
+      prompt(MESSAGES['computer_grand_winner'])
       break
     end
-  end 
+  end
 
-  prompt("Do you want to play again?")
+  # Ask if player wants to continue or exit the game
+  prompt(MESSAGES['play_again'])
   answer = Kernel.gets().chomp()
   break unless answer.downcase().start_with?('y')
 end
 
-prompt("Thank you for playing. Goodbye!")
+prompt(MESSAGES['goodbye'])

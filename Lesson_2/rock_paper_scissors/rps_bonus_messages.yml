@@ -1,0 +1,9 @@
+
+player_win: "You won this round!"
+computer_win: "The computer won this round!"
+tie: "It's a tie for this round!"
+invalid_choice: "That's not a valid choice."
+player_grand_winner: "You are the grand winner!"
+computer_grand_winner: "The Computer is the grand winner!"
+play_again: "Do you want to play again?"
+goodbye: "Thank you for playing. Goodbye!"
