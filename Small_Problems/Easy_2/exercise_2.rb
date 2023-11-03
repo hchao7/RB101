@@ -41,8 +41,8 @@ area_inches = (area_feet * 12).round(2)
 area_centimeters = (area_inches * 10).round(2)
 
 puts "The area of the room is #{area_feet} square feet "\
-     "(#{area_inches} square inches)."\
-     "(#{area_centimeters} square centimeters)."    
+     "(#{area_inches} square inches, or "\
+     "#{area_centimeters} square centimeters)."    
 
 
 # Reflection
